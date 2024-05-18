@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.3",
+    "@gluestack-style/react": "^1.0.56",
+    "@gluestack-ui/themed": "^1.1.26",
     "expo": "~51.0.8",
     "expo-font": "~12.0.5",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
-    "react-native": "0.74.1"
+    "react-native": "0.74.1",
+    "react-native-svg": "^13.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
