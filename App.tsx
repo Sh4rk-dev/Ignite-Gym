@@ -5,7 +5,9 @@ import {
   useFonts,
 } from "@expo-google-fonts/roboto";
 import { StatusBar } from "expo-status-bar";
+import { NativeBaseProvider } from "native-base";
 import { SafeAreaView, Text, View } from "react-native";
+import { THEME } from "src/theme";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -14,11 +16,10 @@ export default function App() {
   });
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <NativeBaseProvider theme={THEME}>
       <StatusBar style="auto" backgroundColor="transparent" translucent />
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        {fontsLoaded ? <Text>Hello Word</Text> : <Loading />}
-      </View>
-    </SafeAreaView>
+
+      {fontsLoaded ? <Text>Hello Word</Text> : <Loading />}
+    </NativeBaseProvider>
   );
 }
