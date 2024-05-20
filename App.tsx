@@ -4,6 +4,7 @@ import {
   Roboto_700Bold,
   useFonts,
 } from "@expo-google-fonts/roboto";
+import { SignIn } from "@screens/SignIn";
 import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider } from "native-base";
 import { SafeAreaView, Text, View } from "react-native";
@@ -17,9 +18,9 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
-      <StatusBar style="auto" backgroundColor="transparent" translucent />
+      <StatusBar style="light" backgroundColor="transparent" translucent />
 
-      {fontsLoaded ? <Text>Hello Word</Text> : <Loading />}
+      {fontsLoaded ? <SignIn/> : <Loading />}
     </NativeBaseProvider>
   );
 }
