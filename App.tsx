@@ -7,7 +7,7 @@ import {
 import { SignIn } from "@screens/SignIn";
 import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider } from "native-base";
-import { SafeAreaView, Text, View } from "react-native";
+
 import { THEME } from "src/theme";
 
 export default function App() {
@@ -18,7 +18,7 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
-      <StatusBar style="light" backgroundColor="transparent" translucent />
+      <StatusBar style="inverted" backgroundColor="transparent" translucent />
 
       {fontsLoaded ? <SignIn/> : <Loading />}
     </NativeBaseProvider>
