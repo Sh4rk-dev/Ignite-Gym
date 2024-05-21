@@ -1,7 +1,9 @@
-import { VStack, Image, Text, Center, Heading, ScrollView } from "native-base";
+import { Image } from "react-native";
+import { Center, Heading, ScrollView, Text, VStack } from "native-base";
 
 import LogoSvg from "@assets/logo.svg";
 import BackgroundImg from "@assets/background.png";
+
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 
@@ -13,10 +15,10 @@ export function SignIn() {
     >
       <VStack flex={1} bg={"gray.700"} px={8}>
         <Image
+          style={{ position: "absolute" }}
           source={BackgroundImg}
           alt="Pessoas treinando"
           resizeMode="cover"
-          position="absolute"
         />
 
         <Center my={24}>
@@ -47,7 +49,6 @@ export function SignIn() {
 
         <Center mt={32}>
           <Text color={"gray.100"} fontSize={"sm"} mb={3} fontFamily={"body"}>
-            {" "}
             Ainda não tem acesso?
           </Text>
 
