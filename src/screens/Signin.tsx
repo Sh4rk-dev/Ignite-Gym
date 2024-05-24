@@ -1,24 +1,33 @@
-import { Image } from "react-native";
 import { Center, Heading, ScrollView, Text, VStack } from "native-base";
+import { Image } from "react-native";
 
-import LogoSvg from "@assets/logo.svg";
 import BackgroundImg from "@assets/background.png";
+import LogoSvg from "@assets/logo.svg";
 
-import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { Input } from "@components/Input";
+import { useNavigation } from "@react-navigation/native";
+import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
 export function SignIn() {
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  function handleNeAccount() {
+    navigation.navigate("singUp");
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
     >
-      <VStack flex={1} bg={"gray.700"} px={8}>
+      <VStack flex={1} px={8}>
         <Image
-          style={{ position: "absolute" }}
-          source={BackgroundImg}
-          alt="Pessoas treinando"
           resizeMode="cover"
+          alt="Pessoas treinando"
+          source={BackgroundImg}
+          defaultSource={BackgroundImg}
+          style={{ position: "absolute" }}
         />
 
         <Center my={24}>
@@ -52,7 +61,11 @@ export function SignIn() {
             Ainda não tem acesso?
           </Text>
 
-          <Button title="Criar conta" variant={"outline"} />
+          <Button
+            onPress={handleNeAccount}
+            title="Criar conta"
+            variant={"outline"}
+          />
         </Center>
       </VStack>
     </ScrollView>

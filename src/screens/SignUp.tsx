@@ -1,24 +1,32 @@
-import { Image } from "react-native";
 import { Center, Heading, ScrollView, Text, VStack } from "native-base";
+import { Image } from "react-native";
 
-import LogoSvg from "@assets/logo.svg";
 import BackgroundImg from "@assets/background.png";
+import LogoSvg from "@assets/logo.svg";
 
-import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { Input } from "@components/Input";
+import { useNavigation } from "@react-navigation/native";
 
 export function SignUp() {
+  const navigation = useNavigation();
+
+  function handleGoBack() {
+    navigation.goBack();
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
     >
-      <VStack flex={1} bg={"gray.700"} px={8}>
+      <VStack flex={1} px={8}>
         <Image
-          style={{ position: "absolute" }}
-          source={BackgroundImg}
-          alt="Pessoas treinando"
           resizeMode="cover"
+          alt="Pessoas treinando"
+          source={BackgroundImg}
+          defaultSource={BackgroundImg}
+          style={{ position: "absolute" }}
         />
 
         <Center my={24}>
@@ -50,7 +58,12 @@ export function SignUp() {
           <Button title="Criar e acessar" />
         </Center>
 
-        <Button title="Voltar para o login" variant={"outline"} mt={32} />
+        <Button
+          onPress={handleGoBack}
+          title="Voltar para o login"
+          variant={"outline"}
+          mt={32}
+        />
       </VStack>
     </ScrollView>
   );
