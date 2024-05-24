@@ -4,7 +4,7 @@ import {
   Roboto_700Bold,
   useFonts,
 } from "@expo-google-fonts/roboto";
-import { SignUp } from "@screens/SignUp";
+import { Routes } from "./src/routes";
 import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider } from "native-base";
 
@@ -20,7 +20,7 @@ export default function App() {
     <NativeBaseProvider theme={THEME}>
       <StatusBar style="inverted" backgroundColor="transparent" translucent />
 
-      {fontsLoaded ? <SignUp/> : <Loading />}
+      {fontsLoaded ? <Routes /> : <Loading />}
     </NativeBaseProvider>
   );
 }
