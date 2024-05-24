@@ -1,14 +1,16 @@
-import { Loading } from "@components/loading";
+import { StatusBar } from "expo-status-bar";
+import { NativeBaseProvider } from "native-base";
+
 import {
   Roboto_400Regular,
   Roboto_700Bold,
   useFonts,
 } from "@expo-google-fonts/roboto";
+
 import { Routes } from "./src/routes";
-import { StatusBar } from "expo-status-bar";
-import { NativeBaseProvider } from "native-base";
 
 import { THEME } from "src/theme";
+import { Loading } from "@components/loading";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
