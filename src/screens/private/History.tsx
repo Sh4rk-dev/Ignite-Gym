@@ -1,9 +1,12 @@
-import { Center, Text } from "native-base";
+import { Header } from "@components/Header";
+import { VStack } from "native-base";
 
 export function History() {
   return (
-    <Center flex={1}>
-      <Text color={"white"}>History</Text>
-    </Center>
+    <VStack flex={1}>
+      <Header position="center">
+        <Header.Title title="Histórico de Exercícios"/>
+      </Header>
+    </VStack>
   );
 }

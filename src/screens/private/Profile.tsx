@@ -1,9 +1,12 @@
-import { Center, Text } from "native-base";
+import { Header } from "@components/Header";
+import { VStack } from "native-base";
 
 export function Profile() {
   return (
-    <Center flex={1}>
-      <Text color={"white"}>Profile</Text>
-    </Center>
+    <VStack flex={1}>
+      <Header position="center">
+        <Header.Title title="Perfil" />
+      </Header>
+    </VStack>
   );
 }
