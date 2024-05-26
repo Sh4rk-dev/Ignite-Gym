@@ -4,36 +4,42 @@ type variants = "start" | "center" | "end" | "space-between";
 
 interface IHeaderProps {
   children: React.ReactNode;
-  position?: variants;
 }
 
 interface IHeaderTitleProps {
   title: string;
   subTitle?: string;
+  position?: variants;
   hasSubTitle?: boolean;
 }
 
-function Header({ children, position }: IHeaderProps) {
+function Header({ children }: IHeaderProps) {
   return (
     <HStack
       h={32}
       pb={5}
       px={8}
       pt={16}
+      flex={1}
       w={"full"}
       space={"4"}
       bg={"gray.600"}
       alignItems={"center"}
-      justifyContent={position}
+      position={"absolute"}
     >
       {children}
     </HStack>
   );
 }
 
-function HeaderTitle({ title, subTitle, hasSubTitle }: IHeaderTitleProps) {
+function HeaderTitle({
+  title,
+  subTitle,
+  hasSubTitle,
+  position,
+}: IHeaderTitleProps) {
   return (
-    <VStack>
+    <VStack flex={1} alignItems={position}>
       <Text color={"white"} fontSize={"md"}>
         {title}
       </Text>

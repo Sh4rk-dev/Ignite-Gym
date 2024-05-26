@@ -4,8 +4,8 @@ import { VStack } from "native-base";
 export function Profile() {
   return (
     <VStack flex={1}>
-      <Header position="center">
-        <Header.Title title="Perfil" />
+      <Header>
+        <Header.Title position={"center"} title="Perfil" />
       </Header>
     </VStack>
   );

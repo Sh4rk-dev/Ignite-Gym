@@ -1,7 +1,9 @@
-import { THEME } from "src/theme";
 import { Center } from "native-base";
 import { ComponentProps } from "react";
 import { TouchableOpacity } from "react-native";
+
+import { THEME } from "src/theme";
+
 import { MaterialIcons } from "@expo/vector-icons";
 
 interface IIconProps {
@@ -9,12 +11,19 @@ interface IIconProps {
   size?: number;
 }
 
-export function HeaderIcon({ name, size = 20 }: IIconProps) {
+export function Icon({ name, size = 20 }: IIconProps) {
   return (
-    <Center justifyContent={"end"} w={"full"} paddingRight={5}>
-      <TouchableOpacity onPress={() => console.log("Saiu dá conta")}>
-        <MaterialIcons name={name} size={size} color={THEME.colors.white} />
-      </TouchableOpacity>
-    </Center>
+    <TouchableOpacity onPress={() => console.log("Saiu dá conta")}>
+      <MaterialIcons name={name} size={size} color={THEME.colors.white} />
+    </TouchableOpacity>
   );
+}
+
+{
+  /* {
+          import { Icon } from "Native-Base"
+          
+          Icon is import "Native Base"
+          <Icon as={MaterialIcons} name="logout" color="gray.200" size={7} />;
+        } */
 }

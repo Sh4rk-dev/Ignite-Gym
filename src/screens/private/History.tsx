@@ -4,8 +4,8 @@ import { VStack } from "native-base";
 export function History() {
   return (
     <VStack flex={1}>
-      <Header position="center">
-        <Header.Title title="Histórico de Exercícios"/>
+      <Header>
+        <Header.Title position={"center"} title="Histórico de Exercícios" />
       </Header>
     </VStack>
   );
