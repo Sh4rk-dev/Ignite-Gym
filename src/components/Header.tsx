@@ -1,4 +1,5 @@
 import { HStack, Text, VStack } from "native-base";
+import { Avatar } from "./Avatar";
 
 type variants = "start" | "center" | "end" | "space-between";
 
@@ -20,12 +21,10 @@ function Header({ children }: IHeaderProps) {
       pb={5}
       px={8}
       pt={16}
-      flex={1}
       w={"full"}
       space={"4"}
       bg={"gray.600"}
       alignItems={"center"}
-      position={"absolute"}
     >
       {children}
     </HStack>
@@ -52,6 +51,17 @@ function HeaderTitle({
   );
 }
 
+function HeaderAvatar() {
+  return (
+    <Avatar
+      size={12}
+      alt="Imagem do usuário"
+      source={{ uri: "https://github.com/Sh4rk-dev.png" }}
+    />
+  );
+}
+
 Header.Title = HeaderTitle;
+Header.Avatar = HeaderAvatar;
 
 export { Header };
