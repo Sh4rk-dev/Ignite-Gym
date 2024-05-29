@@ -21,18 +21,18 @@ export const MuscleGroup: MuscleGroupCard[] = [
   { id: "6", text: "Panturrilhas" },
   {
     id: "7",
-    text: "Abdomen",
+    text: "Abdómen",
   },
   {
     id: "8",
-    text: "Triceps",
+    text: "Tríceps",
   },
   {
     id: "9",
-    text: "Gluteos",
+    text: "Glúteos",
   },
   {
     id: "10",
-    text: "Antebracos",
+    text: "Antebraços",
   },
 ];

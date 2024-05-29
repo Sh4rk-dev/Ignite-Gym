@@ -1,28 +1,34 @@
-import { Center, Text } from "native-base";
-import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import { IPressableProps, Pressable, Text } from "native-base";
 
-interface IGroupCardProps extends TouchableOpacityProps {
+interface IGroupCardProps extends IPressableProps {
   text: string;
-  isActiveText: string;
+  isActive: boolean;
 }
 
-export function GroupCard({ text, isActiveText, ...rest }: IGroupCardProps) {
+export function GroupCard({ text, isActive, ...rest }: IGroupCardProps) {
   return (
-    <TouchableOpacity activeOpacity={0.6} {...rest}>
-      <Center
-        mt={10}
-        h={10}
-        mx={1}
-        bg={"gray.500"}
-        w={"24"}
-        rounded={"sm"}
-        borderWidth={isActiveText === text ? 0.5 : 0}
-        borderColor={isActiveText === text ? "green.500" : ""}
+    <Pressable
+      {...rest}
+      mr={3}
+      px={6}
+      h={10}
+      rounded={"md"}
+      bg={"gray.600"}
+      overflow={"hidden"}
+      isPressed={isActive}
+      alignItems={"center"}
+      justifyContent={"center"}
+      _pressed={{
+        borderColor: "green.500",
+        borderWidth: 1,
+      }}
+    >
+      <Text
+        color={isActive ? "green.500" : "gray.300"}
+        textTransform={"uppercase"}
       >
-        <Text color={isActiveText === text ? "green.500" : "gray.300"}>
-          {text}
-        </Text>
-      </Center>
-    </TouchableOpacity>
+        {text}
+      </Text>
+    </Pressable>
   );
 }

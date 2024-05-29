@@ -28,9 +28,9 @@ export function ExerciseCard({
         space={4}
         w={"full"}
         rounded={"md"}
-        justifyContent={"center"}
-        alignItems={"center"}
         bg={"gray.500"}
+        alignItems={"center"}
+        justifyContent={"center"}
       >
         <Image source={{ uri: img }} alt="teste" w={62} h={62} rounded={"md"} />
 

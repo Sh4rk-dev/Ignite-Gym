@@ -1,5 +1,4 @@
-import { FlatList } from "react-native";
-import { Center, HStack, Text, VStack, View } from "native-base";
+import { Center, HStack, Text, VStack, FlatList } from "native-base";
 
 import { MuscleGroup } from "src/moked/groupCard";
 import { Exercises } from "src/moked/arrayExercise";
@@ -14,36 +13,37 @@ export function Home() {
   const [currentExercise, setCurrentExercise] = useState("Peito");
 
   const Exercise = Exercises.filter((item) => item.type === currentExercise);
-  const GroupCardMuscle = MuscleGroup;
 
   return (
-    <VStack flex={1} alignItems={"center"}>
+    <VStack>
       <Header>
         <Header.Avatar />
         <Header.Title title="Olá," subTitle="Renan Rapace" hasSubTitle />
         <Icon name="logout" />
       </Header>
 
-      <Center mx={6} h={24}>
-        <FlatList
-          horizontal
-          data={GroupCardMuscle}
-          keyExtractor={(item) => item.id}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => {
-            console.log(currentExercise);
-            return (
-              <GroupCard
-                text={item.text}
-                isActiveText={currentExercise}
-                onPress={() => setCurrentExercise(item.text)}
-              />
-            );
-          }}
-        />
-      </Center>
+      <FlatList
+        mt={10}
+        pb={12}
+        maxH={12}
+        horizontal
+        data={MuscleGroup}
+        keyExtractor={(item) => item.id}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => {
+          const Active = currentExercise === item.text;
+          return (
+            <GroupCard
+              text={item.text}
+              isActive={Active}
+              onPress={() => setCurrentExercise(item.text)}
+            />
+          );
+        }}
+        _contentContainerStyle={{ pl: 6, height: 16 }}
+      />
 
-      <HStack px={10} my={3} w={"full"} justifyContent={"space-between"}>
+      <HStack px={10} pt={10} pb={2} justifyContent={"space-between"}>
         <Text fontSize={"xl"} color={"white"}>
           Exercícios
         </Text>
@@ -52,24 +52,27 @@ export function Home() {
         </Text>
       </HStack>
 
-      <Center w={"lg"} flex={1} pb={20}>
-        <FlatList
-          data={Exercise}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
-            return (
-              <ExerciseCard
-                img={item.img}
-                text={item.text}
-                type={item.type}
-                repetitions={item.repetitions}
-                numberOfSeries={item.numberOfSeries}
-              />
-            );
-          }}
-        />
-      </Center>
+      <FlatList
+        mb={80}
+        data={Exercise}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => {
+          return (
+            <ExerciseCard
+              img={item.img}
+              text={item.text}
+              type={item.type}
+              repetitions={item.repetitions}
+              numberOfSeries={item.numberOfSeries}
+            />
+          );
+        }}
+        _contentContainerStyle={{
+          paddingBottom: 16,
+          paddingX: 6,
+        }}
+      />
     </VStack>
   );
 }

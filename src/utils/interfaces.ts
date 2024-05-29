@@ -4,11 +4,11 @@ type TypeExerciseMuscle =
   | "Costas"
   | "Ombros"
   | "Braços"
-  | "Gluteos"
-  | "Abdomen"
-  | "Antebracos"
+  | "Glúteos"
+  | "Abdómen"
+  | "Antebraços"
   | "Panturrilhas"
-  | "Triceps";
+  | "Tríceps";
 
 export interface MuscleGroupCard {
   id: string;
