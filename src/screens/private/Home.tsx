@@ -20,7 +20,7 @@ export function Home() {
       <Header>
         <Header.Avatar />
         <Header.Title title="Olá," subTitle="Renan Rapace" hasSubTitle />
-        <Icon name="logout" as={MaterialIcons} color={"white"} />
+        <Icon name="logout" as={MaterialIcons} color={"white"} size={6} />
       </Header>
 
       <FlatList
@@ -32,7 +32,9 @@ export function Home() {
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => {
-          const Active = currentExercise === item.text;
+          const Active =
+            currentExercise.toLocaleUpperCase() ===
+            item.text.toLocaleUpperCase();
           return (
             <GroupCard
               text={item.text}
@@ -71,7 +73,7 @@ export function Home() {
             );
           }}
           _contentContainerStyle={{
-            paddingBottom: 16
+            paddingBottom: 20
           }}
         />
       </VStack>
