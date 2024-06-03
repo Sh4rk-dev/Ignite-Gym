@@ -1,12 +1,13 @@
-import { Center, HStack, Text, VStack, FlatList } from "native-base";
+import { useState } from "react";
+import { FlatList, HStack, Heading, Icon, Text, VStack } from "native-base";
 
 import { MuscleGroup } from "src/moked/groupCard";
 import { Exercises } from "src/moked/arrayExercise";
 
-import { Icon } from "@components/Icon";
+import { MaterialIcons } from "@expo/vector-icons";
+
 import { Header } from "@components/Header";
 import { GroupCard } from "@components/GroupCard";
-import { useState } from "react";
 import { ExerciseCard } from "@components/ExerciseCard";
 
 export function Home() {
@@ -15,17 +16,17 @@ export function Home() {
   const Exercise = Exercises.filter((item) => item.type === currentExercise);
 
   return (
-    <VStack>
+    <VStack flex={1}>
       <Header>
         <Header.Avatar />
         <Header.Title title="Olá," subTitle="Renan Rapace" hasSubTitle />
-        <Icon name="logout" />
+        <Icon name="logout" as={MaterialIcons} color={"white"} />
       </Header>
 
       <FlatList
         mt={10}
         pb={12}
-        maxH={12}
+        maxH={10}
         horizontal
         data={MuscleGroup}
         keyExtractor={(item) => item.id}
@@ -40,39 +41,40 @@ export function Home() {
             />
           );
         }}
-        _contentContainerStyle={{ pl: 6, height: 16 }}
+        _contentContainerStyle={{ px: 6, height: 16 }}
       />
 
-      <HStack px={10} pt={10} pb={2} justifyContent={"space-between"}>
-        <Text fontSize={"xl"} color={"white"}>
-          Exercícios
-        </Text>
-        <Text fontSize={"xl"} color={"white"}>
-          {Exercise.length}
-        </Text>
-      </HStack>
+      <VStack flex={1} px={6}>
+        <HStack pt={10} pb={2} justifyContent={"space-between"}>
+          <Heading fontSize={"xl"} color={"gray.200"}>
+            Exercícios
+          </Heading>
+          <Text fontSize={"md"} color={"gray.200"}>
+            {Exercise.length}
+          </Text>
+        </HStack>
 
-      <FlatList
-        mb={80}
-        data={Exercise}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => {
-          return (
-            <ExerciseCard
-              img={item.img}
-              text={item.text}
-              type={item.type}
-              repetitions={item.repetitions}
-              numberOfSeries={item.numberOfSeries}
-            />
-          );
-        }}
-        _contentContainerStyle={{
-          paddingBottom: 16,
-          paddingX: 6,
-        }}
-      />
+        <FlatList
+          mb={22}
+          data={Exercise}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => {
+            return (
+              <ExerciseCard
+                img={item.img}
+                text={item.text}
+                type={item.type}
+                repetitions={item.repetitions}
+                numberOfSeries={item.numberOfSeries}
+              />
+            );
+          }}
+          _contentContainerStyle={{
+            paddingBottom: 16
+          }}
+        />
+      </VStack>
     </VStack>
   );
 }

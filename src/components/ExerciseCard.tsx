@@ -1,57 +1,66 @@
-import { Center, HStack, Image, Text, VStack } from "native-base";
-import { TouchableOpacity } from "react-native";
-import { Icon } from "./Icon";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 
-interface IExerciseCardProps {
+import { HStack, Heading, Icon, Image, Text, VStack } from "native-base";
+
+import { MaterialIcons } from "@expo/vector-icons";
+interface IExerciseCardProps extends TouchableOpacityProps {
   id?: string;
   img: string;
   text: string;
-  type: string;
+  type?: string;
   numberOfSeries: number;
   repetitions: number;
 }
 
 export function ExerciseCard({
-  id,
   img,
-  type,
   text,
   repetitions,
   numberOfSeries,
+  ...rest
 }: IExerciseCardProps) {
   return (
-    <TouchableOpacity activeOpacity={0.8}>
+    <TouchableOpacity activeOpacity={0.8} {...rest}>
       <HStack
-        p={3}
-        my={2}
-        h={24}
+        p={2}
+        mb={3}
         space={4}
-        w={"full"}
         rounded={"md"}
         bg={"gray.500"}
         alignItems={"center"}
-        justifyContent={"center"}
       >
-        <Image source={{ uri: img }} alt="teste" w={62} h={62} rounded={"md"} />
+        <Image
+          w={62}
+          h={62}
+          alt="teste"
+          rounded={"md"}
+          resizeMode="center"
+          source={{ uri: img }}
+        />
 
         <VStack justifyContent={"center"} flex={1}>
-          <Text
-            color={"white"}
+          <Heading
             w={40}
-            fontFamily={"heading"}
-            fontSize={"lg"}
             mb={1}
+            color={"white"}
+            fontSize={"md"}
             numberOfLines={1}
           >
             {text}
-          </Text>
+          </Heading>
           <HStack>
-            <Text color={"white"}>
+            <Text color={"gray.200"} numberOfLines={2}>
               {numberOfSeries} séries x {repetitions} repetições
             </Text>
           </HStack>
         </VStack>
-        <Icon name="keyboard-arrow-right" />
+
+        <Icon
+          size={7}
+          as={MaterialIcons}
+          color={"gray.200"}
+          name="chevron-right"
+        />
       </HStack>
     </TouchableOpacity>
   );
