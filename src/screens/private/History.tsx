@@ -1,12 +1,14 @@
 import { useState } from "react";
 
 import { SectionList } from "react-native";
-import { Heading, VStack } from "native-base";
+import { Center, Heading, Image, Text, VStack } from "native-base";
 
 import { Data } from "@moked/historyExercise";
 
 import { Header } from "@components/Header";
 import { HistoryCard } from "@components/HistoryCard";
+
+import EmptySVG from "@assets/EmptyPersonalTrainer.svg";
 
 export function History() {
   const HistoryExercise = Data;
@@ -18,12 +20,18 @@ export function History() {
       </Header>
 
       <SectionList
-        contentContainerStyle={{
-          paddingHorizontal: 20
-        }}
         sections={HistoryExercise}
         keyExtractor={(item) => item}
         renderItem={({ item }) => <HistoryCard />}
+        contentContainerStyle={
+          HistoryExercise.length === 0
+            ? {
+                flex: 1,
+                justifyContent: "center",
+                marginTop: -120
+              }
+            : { paddingHorizontal: 20 }
+        }
         renderSectionHeader={({ section }) => {
           return (
             <Heading
@@ -38,6 +46,20 @@ export function History() {
             </Heading>
           );
         }}
+        ListEmptyComponent={() => (
+          <Center px={5}>
+            <EmptySVG width={270} height={270} />
+
+            <Heading color={"gray.100"} fontSize={"xl"}>
+              Nenhum treino encontrado aqui!
+            </Heading>
+
+            <Text color={"gray.100"} fontSize={"md"} textAlign={"center"}>
+              Você não concluiu nenhum treino, volte para aba de treino.
+            </Text>
+          </Center>
+        )}
+        showsVerticalScrollIndicator={false}
       />
     </VStack>
   );
