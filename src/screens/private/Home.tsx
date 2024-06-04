@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FlatList, HStack, Heading, Icon, Text, VStack } from "native-base";
 
-import { MuscleGroup } from "src/moked/groupCard";
-import { Exercises } from "src/moked/arrayExercise";
+import { MuscleGroup } from "@moked/groupCard";
+import { Exercises } from "@moked/arrayExercise";
 
 import { MaterialIcons } from "@expo/vector-icons";
 

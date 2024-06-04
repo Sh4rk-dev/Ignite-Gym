@@ -1,4 +1,4 @@
-import { HStack, Text, VStack } from "native-base";
+import { HStack, Heading, Text, VStack } from "native-base";
 import { Avatar } from "./Avatar";
 
 type variants = "start" | "center" | "end" | "space-between";
@@ -35,13 +35,13 @@ function HeaderTitle({
   title,
   subTitle,
   hasSubTitle,
-  position,
+  position
 }: IHeaderTitleProps) {
   return (
     <VStack flex={1} alignItems={position}>
-      <Text color={"white"} fontSize={"md"}>
+      <Heading color={"gray.100"} fontSize={"lg"}>
         {title}
-      </Text>
+      </Heading>
       {hasSubTitle && (
         <Text color={"white"} fontSize={"md"}>
           {subTitle}
