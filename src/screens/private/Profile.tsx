@@ -18,7 +18,7 @@ export function Profile() {
         <Header.Title position={"center"} title="Minha Conta" />
       </Header>
 
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Center mt={6} px={10}>
           {loading ? (
             <Skeleton
@@ -63,8 +63,13 @@ export function Profile() {
           />
         </Center>
 
-        <VStack px={10} mb={9}>
-          <Text color={"gray.100"} fontSize={"md"} mt={8} mb={3}>
+        <Center px={10} mb={9} mt={12}>
+          <Text
+            color={"gray.100"}
+            fontSize={"md"}
+            mb={2}
+            alignSelf={"flex-start"}
+          >
             Alterar senha
           </Text>
 
@@ -88,8 +93,8 @@ export function Profile() {
             autoCapitalize="none"
             placeholder="Confirme a nova senha"
           />
-          <Button disabled title="Atualizar" mb={32} mt={6} />
-        </VStack>
+          <Button disabled title="Atualizar" mt={6} />
+        </Center>
       </ScrollView>
     </VStack>
   );

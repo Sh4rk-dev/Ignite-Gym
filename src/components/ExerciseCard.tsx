@@ -32,9 +32,9 @@ export function ExerciseCard({
         <Image
           w={62}
           h={62}
-          alt="teste"
+          alt="Imagem do exercicio"
           rounded={"md"}
-          resizeMode="center"
+          resizeMode="cover"
           source={{ uri: img }}
         />
 
