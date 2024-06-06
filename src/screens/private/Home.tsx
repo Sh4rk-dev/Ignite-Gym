@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { FlatList, HStack, Heading, Icon, Text, VStack } from "native-base";
+
+import { AppNavigationTabsRoutesProps } from "@routes/app.routes";
 
 import { MuscleGroup } from "@moked/groupCard";
 import { Exercises } from "@moked/arrayExercise";
@@ -14,6 +17,11 @@ export function Home() {
   const [currentExercise, setCurrentExercise] = useState("Peito");
 
   const Exercise = Exercises.filter((item) => item.type === currentExercise);
+
+  const Navigation = useNavigation<AppNavigationTabsRoutesProps>();
+  function handleOpenExerciseDetails() {
+    return Navigation.navigate("exercise");
+  }
 
   return (
     <VStack flex={1}>
@@ -69,6 +77,7 @@ export function Home() {
                 type={item.type}
                 repetitions={item.repetitions}
                 numberOfSeries={item.numberOfSeries}
+                onPress={handleOpenExerciseDetails}
               />
             );
           }}
