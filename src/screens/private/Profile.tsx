@@ -1,16 +1,44 @@
-import { Center, Skeleton, Text, VStack } from "native-base";
 import { useState } from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
+import { Center, Skeleton, Text, VStack } from "native-base";
 
+import * as ImagePicker from "expo-image-picker";
+
+import { Input } from "@components/Input";
 import { Avatar } from "@components/Avatar";
 import { Header } from "@components/Header";
-import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 
 const PHOTO_SIZE = 33;
 
 export function Profile() {
-  const [loading, setLoading] = useState(false);
+  const [photoIsLoading, setPhotoIsLoading] = useState(false);
+  const [userPhoto, setUserPhoto] = useState(
+    "https://github.com/Sh4rk-dev.png"
+  );
+
+  async function handleUserPhotoSelect() {
+    setPhotoIsLoading(true);
+    try {
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      });
+
+      if (photoSelected.canceled) {
+        return;
+      }
+
+      if (photoSelected.assets[0].uri)
+        setUserPhoto(photoSelected.assets[0].uri);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPhotoIsLoading(false);
+    }
+  }
 
   return (
     <VStack flex={1}>
@@ -20,28 +48,28 @@ export function Profile() {
 
       <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Center mt={6} px={10}>
-          {loading ? (
+          {photoIsLoading ? (
             <Skeleton
               w={PHOTO_SIZE}
               h={PHOTO_SIZE}
               rounded={"full"}
-              startColor={"gray.600"}
               endColor={"gray.400"}
+              startColor={"gray.600"}
             />
           ) : (
             <Avatar
               size={PHOTO_SIZE}
               alt="Imagem do usuário"
-              source={{ uri: "https://github.com/Sh4rk-dev.png" }}
+              source={{ uri: userPhoto }}
             />
           )}
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleUserPhotoSelect}>
             <Text
+              mb={8}
+              mt={2}
+              fontSize={"md"}
               color={"green.500"}
               fontWeight={"bold"}
-              fontSize={"md"}
-              mt={2}
-              mb={8}
             >
               Alterar Foto
             </Text>
@@ -50,24 +78,24 @@ export function Profile() {
           <Input
             bg={"gray.600"}
             autoCapitalize="none"
-            placeholder="Renan Rapace"
             keyboardType="default"
+            placeholder="Renan Rapace"
           />
 
           <Input
             isDisabled
             bg={"gray.600"}
             autoCapitalize="none"
-            placeholder="renanrapace13@gmail.com"
             keyboardType="email-address"
+            placeholder="renanrapace13@gmail.com"
           />
         </Center>
 
         <Center px={10} mb={9} mt={12}>
           <Text
-            color={"gray.100"}
-            fontSize={"md"}
             mb={2}
+            fontSize={"md"}
+            color={"gray.100"}
             alignSelf={"flex-start"}
           >
             Alterar senha
