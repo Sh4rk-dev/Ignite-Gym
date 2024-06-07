@@ -8,8 +8,8 @@ interface IExerciseCardProps extends TouchableOpacityProps {
   img: string;
   text: string;
   type?: string;
-  numberOfSeries: number;
   repetitions: number;
+  numberOfSeries: number;
 }
 
 export function ExerciseCard({
@@ -32,10 +32,10 @@ export function ExerciseCard({
         <Image
           w={62}
           h={62}
-          alt="Imagem do exercicio"
           rounded={"md"}
           resizeMode="cover"
           source={{ uri: img }}
+          alt="Imagem do exercicio"
         />
 
         <VStack justifyContent={"center"} flex={1}>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList, HStack, Heading, Icon, Text, VStack } from "native-base";
 
+import { ArrayExercise } from "@utils/interfaces";
+
 import { AppNavigationTabsRoutesProps } from "@routes/app.routes";
 
 import { MuscleGroup } from "@moked/groupCard";
@@ -19,8 +21,9 @@ export function Home() {
   const Exercise = Exercises.filter((item) => item.type === currentExercise);
 
   const Navigation = useNavigation<AppNavigationTabsRoutesProps>();
-  function handleOpenExerciseDetails() {
-    return Navigation.navigate("exercise");
+  function handleOpenExerciseDetails(data: ArrayExercise) {
+    const ExerciseData = data;
+    return Navigation.navigate("exercise"), console.log(ExerciseData);
   }
 
   return (
@@ -35,6 +38,7 @@ export function Home() {
         mt={10}
         pb={12}
         maxH={10}
+        minH={10}
         horizontal
         data={MuscleGroup}
         keyExtractor={(item) => item.id}
@@ -77,12 +81,12 @@ export function Home() {
                 type={item.type}
                 repetitions={item.repetitions}
                 numberOfSeries={item.numberOfSeries}
-                onPress={handleOpenExerciseDetails}
+                onPress={() => handleOpenExerciseDetails(item)}
               />
             );
           }}
           _contentContainerStyle={{
-            paddingBottom: 20
+            paddingBottom: 20,
           }}
         />
       </VStack>
