@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ScrollView, TouchableOpacity } from "react-native";
+import { Alert, ScrollView, TouchableOpacity } from "react-native";
 import { Center, Skeleton, Text, VStack } from "native-base";
 
+import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 
 import { Input } from "@components/Input";
@@ -31,8 +32,23 @@ export function Profile() {
         return;
       }
 
-      if (photoSelected.assets[0].uri)
+      if (photoSelected.assets[0].uri) {
+        const photoInfo = photoSelected.assets[0].fileSize;
+
+        if (photoInfo && photoInfo / 1024 / 1024 > 5) {
+          return Alert.alert(
+            "Essa imagem é muito grande.",
+            "Escolha uma de até 5MB.",
+            [
+              {
+                text: "Entendi",
+              },
+            ]
+          );
+        }
+
         setUserPhoto(photoSelected.assets[0].uri);
+      }
     } catch (error) {
       console.log(error);
     } finally {
