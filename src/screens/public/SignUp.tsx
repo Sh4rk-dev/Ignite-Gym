@@ -1,15 +1,37 @@
-import { Center, Heading, ScrollView, Text, VStack } from "native-base";
+import { useState } from "react";
 import { Image } from "react-native";
+import { Center, Heading, ScrollView, Text, VStack } from "native-base";
 
-import BackgroundImg from "@assets/background.png";
+import { useForm, Controller } from "react-hook-form";
+
 import LogoSvg from "@assets/logo.svg";
+import BackgroundImg from "@assets/background.png";
 
-import { Button } from "@components/Button";
-import { Input } from "@components/Input";
 import { useNavigation } from "@react-navigation/native";
 
+import { Input } from "@components/Input";
+import { Button } from "@components/Button";
+
+interface IFormDataProps {
+  name: string;
+  email: string;
+  password: string;
+  password_confirm: string;
+}
+
 export function SignUp() {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormDataProps>();
+
   const navigation = useNavigation();
+
+  function handleSignUp(data: IFormDataProps) {
+    return console.log(data);
+  }
 
   function handleGoBack() {
     navigation.goBack();
@@ -46,23 +68,94 @@ export function SignUp() {
             Crie sua conta
           </Heading>
 
-          <Input placeholder="Nome" type="text" />
-
-          <Input
-            placeholder="E-mail"
-            keyboardType="email-address"
-            autoCapitalize="none"
+          <Controller
+            name="name"
+            control={control}
+            rules={{
+              required: "Informe o nome.",
+            }}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                type="text"
+                value={value}
+                placeholder="Nome"
+                onChangeText={onChange}
+                label={errors.name?.message}
+                {...register("name")}
+              />
+            )}
           />
 
-          <Input placeholder="Senha" secureTextEntry autoCapitalize="none" />
-          <Button title="Criar e acessar" />
+          <Controller
+            name="email"
+            control={control}
+            rules={{
+              required: "Informe o seu E-mail.",
+            }}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                value={value}
+                placeholder="E-mail"
+                autoCapitalize="none"
+                onChangeText={onChange}
+                keyboardType="email-address"
+                label={errors.email?.message}
+                {...register("email")}
+              />
+            )}
+          />
+
+          <Controller
+            name="password"
+            control={control}
+            rules={{
+              required: "Digite a sua senha.",
+            }}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                value={value}
+                secureTextEntry
+                placeholder="Senha"
+                autoCapitalize="none"
+                onChangeText={onChange}
+                label={errors.password?.message}
+                {...register("password")}
+              />
+            )}
+          />
+
+          <Controller
+            name="password_confirm"
+            control={control}
+            rules={{
+              required: "Confirme a sua senha.",
+            }}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                value={value}
+                secureTextEntry
+                returnKeyType="send"
+                autoCapitalize="none"
+                onChangeText={onChange}
+                placeholder="Confirme a Senha"
+                label={errors.password_confirm?.message}
+                onSubmitEditing={handleSubmit(handleSignUp)}
+                {...register("password_confirm")}
+              />
+            )}
+          />
+
+          <Button
+            onPress={handleSubmit(handleSignUp)}
+            title="Criar e acessar"
+          />
         </Center>
 
         <Button
+          mt={12}
+          variant={"outline"}
           onPress={handleGoBack}
           title="Voltar para o login"
-          variant={"outline"}
-          mt={32}
         />
       </VStack>
     </ScrollView>

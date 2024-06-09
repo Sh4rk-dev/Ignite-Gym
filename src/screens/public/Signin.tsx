@@ -1,13 +1,14 @@
-import { Center, Heading, ScrollView, Text, VStack } from "native-base";
 import { Image } from "react-native";
+import { Center, Heading, ScrollView, Text, VStack } from "native-base";
 
-import BackgroundImg from "@assets/background.png";
 import LogoSvg from "@assets/logo.svg";
+import BackgroundImg from "@assets/background.png";
 
-import { Button } from "@components/Button";
-import { Input } from "@components/Input";
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+
+import { Input } from "@components/Input";
+import { Button } from "@components/Button";
 
 export function SignIn() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
