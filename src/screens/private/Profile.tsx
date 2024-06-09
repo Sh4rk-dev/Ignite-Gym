@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Alert, ScrollView, TouchableOpacity } from "react-native";
-import { Center, Skeleton, Text, VStack } from "native-base";
+import { ScrollView, TouchableOpacity } from "react-native";
+import { Center, Skeleton, Text, VStack, useToast } from "native-base";
 
-import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 
 import { Input } from "@components/Input";
@@ -17,6 +16,7 @@ export function Profile() {
   const [userPhoto, setUserPhoto] = useState(
     "https://github.com/Sh4rk-dev.png"
   );
+  const Toast = useToast();
 
   async function handleUserPhotoSelect() {
     setPhotoIsLoading(true);
@@ -36,15 +36,12 @@ export function Profile() {
         const photoInfo = photoSelected.assets[0].fileSize;
 
         if (photoInfo && photoInfo / 1024 / 1024 > 5) {
-          return Alert.alert(
-            "Essa imagem é muito grande.",
-            "Escolha uma de até 5MB.",
-            [
-              {
-                text: "Entendi",
-              },
-            ]
-          );
+          return Toast.show({
+            paddingY: 3,
+            placement: "top",
+            bgColor: "red.500",
+            title: "Essa imagem é muito grande. Escolha uma de até 5MB.",
+          });
         }
 
         setUserPhoto(photoSelected.assets[0].uri);
