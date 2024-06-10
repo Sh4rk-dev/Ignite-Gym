@@ -1,3 +1,8 @@
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Controller, useForm } from "react-hook-form";
+
 import { Image } from "react-native";
 import { Center, Heading, ScrollView, Text, VStack } from "native-base";
 
@@ -6,15 +11,40 @@ import BackgroundImg from "@assets/background.png";
 
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+import { AppNavigationTabsRoutesProps } from "@routes/app.routes";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 
+const schemaSingInForm = z.object({
+  email: z
+    .string({ message: "Campo obrigatório" })
+    .email("E-mail está inválido"),
+  password: z.string({ message: "Campo obrigatório" }),
+});
+
+type FormSigInValidation = z.infer<typeof schemaSingInForm>;
+
 export function SignIn() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+  const navigationAppTabs = useNavigation<AppNavigationTabsRoutesProps>();
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormSigInValidation>({
+    resolver: zodResolver(schemaSingInForm),
+  });
 
   function handleNeAccount() {
     navigation.navigate("singUp");
+  }
+
+  function handleLoginAccount(data: FormSigInValidation) {
+    return console.log(data);
+    ;
   }
 
   return (
@@ -48,13 +78,39 @@ export function SignIn() {
             Acesse a sua conta
           </Heading>
 
-          <Input
-            placeholder="E-mail"
-            keyboardType="email-address"
-            autoCapitalize="none"
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                value={value}
+                placeholder="E-mail"
+                autoCapitalize="none"
+                onChangeText={onChange}
+                keyboardType="email-address"
+                errorMessage={errors.email?.message}
+                {...register("email")}
+              />
+            )}
           />
-          <Input placeholder="Senha" secureTextEntry autoCapitalize="none" />
-          <Button title="Acessar" />
+
+          <Controller
+            name="password"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                value={value}
+                secureTextEntry
+                placeholder="Senha"
+                autoCapitalize="none"
+                onChangeText={onChange}
+                errorMessage={errors.password?.message}
+                {...register("password")}
+              />
+            )}
+          />
+
+          <Button title="Acessar" onPress={handleSubmit(handleLoginAccount)} />
         </Center>
 
         <Center mt={"40"}>
