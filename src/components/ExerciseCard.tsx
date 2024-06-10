@@ -45,6 +45,7 @@ export function ExerciseCard({
             color={"white"}
             fontSize={"md"}
             numberOfLines={1}
+            fontFamily={"heading"}
           >
             {text}
           </Heading>

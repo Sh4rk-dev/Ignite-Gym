@@ -41,7 +41,12 @@ export function Exercise() {
             alignContent={"center"}
             justifyContent={"space-between"}
           >
-            <Heading color={"gray.100"} fontSize={"lg"} flexShrink={1}>
+            <Heading
+              flexShrink={1}
+              fontSize={"lg"}
+              color={"gray.100"}
+              fontFamily={"heading"}
+            >
               Puxada frontal
             </Heading>
 

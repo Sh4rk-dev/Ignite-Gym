@@ -1,8 +1,7 @@
 import {
-  Input as NativeBaseInput,
-  IInputProps,
-  Text,
   FormControl,
+  IInputProps,
+  Input as NativeBaseInput,
 } from "native-base";
 
 interface IInputTextProps extends IInputProps {
@@ -18,8 +17,6 @@ export function Input({
 
   return (
     <FormControl isInvalid={invalid}>
-      <FormControl.ErrorMessage pb={2}>{errorMessage}</FormControl.ErrorMessage>
-
       <NativeBaseInput
         h={14}
         px={4}
@@ -42,6 +39,9 @@ export function Input({
         placeholderTextColor="gray.300"
         {...rest}
       />
+      <FormControl.ErrorMessage mt={-3} pb={3} _text={{ color: "red.500" }}>
+        {errorMessage}
+      </FormControl.ErrorMessage>
     </FormControl>
   );
 }

@@ -39,7 +39,7 @@ function HeaderTitle({
 }: IHeaderTitleProps) {
   return (
     <VStack flex={1} alignItems={position}>
-      <Heading color={"gray.100"} fontSize={"lg"}>
+      <Heading color={"gray.100"} fontSize={"lg"} fontFamily={"heading"}>
         {title}
       </Heading>
       {hasSubTitle && (

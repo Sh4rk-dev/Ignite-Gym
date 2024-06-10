@@ -28,7 +28,7 @@ export function History() {
             ? {
                 flex: 1,
                 justifyContent: "center",
-                marginTop: -120
+                marginTop: -120,
               }
             : { paddingHorizontal: 20 }
         }
@@ -40,6 +40,7 @@ export function History() {
               mx={5}
               fontSize={"md"}
               color={"gray.100"}
+              fontFamily={"heading"}
               textTransform={"capitalize"}
             >
               {section.title}
@@ -50,7 +51,7 @@ export function History() {
           <Center px={5}>
             <EmptySVG width={270} height={270} />
 
-            <Heading color={"gray.100"} fontSize={"xl"}>
+            <Heading color={"gray.100"} fontSize={"xl"} fontFamily={"heading"}>
               Nenhum treino encontrado aqui!
             </Heading>
 
