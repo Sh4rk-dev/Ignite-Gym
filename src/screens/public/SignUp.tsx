@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Image } from "react-native";
 import { Center, Heading, ScrollView, Text, VStack } from "native-base";
 
@@ -12,12 +14,27 @@ import { useNavigation } from "@react-navigation/native";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 
-interface IFormDataProps {
-  name: string;
-  email: string;
-  password: string;
-  password_confirm: string;
-}
+const FormSchemaValidation = z
+  .object({
+    name: z
+      .string({ message: "Esse campo é obrigatório" })
+      .min(1, "Digite um nome válido"),
+    email: z
+      .string({ message: "Esse campo é obrigatório" })
+      .email("Digite um e-mail inválido"),
+    password: z
+      .string({ message: "Esse campo é obrigatório" })
+      .min(6, "A senha deve ter pelo menos  6 dígitos"),
+    password_confirm: z
+      .string({ message: "Esse campo é obrigatório" })
+      .min(6, "Confirme a senha"),
+  })
+  .refine((data) => data.password_confirm === data.password, {
+    message: "As senhas não coincidem",
+    path: ["password_confirm"],
+  });
+
+type FormValidation = z.infer<typeof FormSchemaValidation>;
 
 export function SignUp() {
   const {
@@ -25,11 +42,13 @@ export function SignUp() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormDataProps>();
+  } = useForm<FormValidation>({
+    resolver: zodResolver(FormSchemaValidation),
+  });
 
   const navigation = useNavigation();
 
-  function handleSignUp(data: IFormDataProps) {
+  function handleSignUp(data: FormValidation) {
     return console.log(data);
   }
 
@@ -71,16 +90,13 @@ export function SignUp() {
           <Controller
             name="name"
             control={control}
-            rules={{
-              required: "Informe o nome.",
-            }}
             render={({ field: { onChange, value } }) => (
               <Input
                 type="text"
                 value={value}
                 placeholder="Nome"
                 onChangeText={onChange}
-                label={errors.name?.message}
+                errorMessage={errors.name?.message}
                 {...register("name")}
               />
             )}
@@ -89,9 +105,6 @@ export function SignUp() {
           <Controller
             name="email"
             control={control}
-            rules={{
-              required: "Informe o seu E-mail.",
-            }}
             render={({ field: { onChange, value } }) => (
               <Input
                 value={value}
@@ -99,7 +112,7 @@ export function SignUp() {
                 autoCapitalize="none"
                 onChangeText={onChange}
                 keyboardType="email-address"
-                label={errors.email?.message}
+                errorMessage={errors.email?.message}
                 {...register("email")}
               />
             )}
@@ -108,9 +121,6 @@ export function SignUp() {
           <Controller
             name="password"
             control={control}
-            rules={{
-              required: "Digite a sua senha.",
-            }}
             render={({ field: { onChange, value } }) => (
               <Input
                 value={value}
@@ -118,7 +128,7 @@ export function SignUp() {
                 placeholder="Senha"
                 autoCapitalize="none"
                 onChangeText={onChange}
-                label={errors.password?.message}
+                errorMessage={errors.password?.message}
                 {...register("password")}
               />
             )}
@@ -127,9 +137,6 @@ export function SignUp() {
           <Controller
             name="password_confirm"
             control={control}
-            rules={{
-              required: "Confirme a sua senha.",
-            }}
             render={({ field: { onChange, value } }) => (
               <Input
                 value={value}
@@ -138,7 +145,7 @@ export function SignUp() {
                 autoCapitalize="none"
                 onChangeText={onChange}
                 placeholder="Confirme a Senha"
-                label={errors.password_confirm?.message}
+                errorMessage={errors.password_confirm?.message}
                 onSubmitEditing={handleSubmit(handleSignUp)}
                 {...register("password_confirm")}
               />
@@ -152,7 +159,7 @@ export function SignUp() {
         </Center>
 
         <Button
-          mt={12}
+          my={12}
           variant={"outline"}
           onPress={handleGoBack}
           title="Voltar para o login"

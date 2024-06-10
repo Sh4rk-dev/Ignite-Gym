@@ -1,43 +1,47 @@
-import { Input as NativeBaseInput, IInputProps, Text } from "native-base";
+import {
+  Input as NativeBaseInput,
+  IInputProps,
+  Text,
+  FormControl,
+} from "native-base";
 
 interface IInputTextProps extends IInputProps {
-  label?: string;
+  errorMessage?: string | null;
 }
 
-export function Input({ label, ...rest }: IInputTextProps) {
+export function Input({
+  errorMessage = null,
+  isInvalid,
+  ...rest
+}: IInputTextProps) {
+  const invalid = !!errorMessage || isInvalid;
+
   return (
-    <>
-      {label && (
-        <Text color="red.500" flex={1} w={"full"}>
-          {label}
-        </Text>
-      )}
+    <FormControl isInvalid={invalid}>
+      <FormControl.ErrorMessage pb={2}>{errorMessage}</FormControl.ErrorMessage>
 
       <NativeBaseInput
         h={14}
         px={4}
         mb={4}
-        borderWidth={label ? 1 : 0}
-        borderColor={label && "red.500"}
+        borderWidth={0}
         fontSize={"md"}
         color={"white"}
         bg={"gray.700"}
-        _focus={
-          label
-            ? {
-                bg: "gray.700",
-                borderWidth: 1,
-                borderColor: "red.500",
-              }
-            : {
-                bg: "gray.700",
-                borderLeftWidth: 2,
-                borderColor: "green.500",
-              }
-        }
-        placeholderTextColor={label ? "red.500" : "gray.300"}
+        _focus={{
+          bg: "gray.700",
+          borderLeftWidth: 2,
+          borderColor: "green.500",
+        }}
+        isInvalid={invalid}
+        _invalid={{
+          borderWidth: 1,
+          borderColor: "red.500",
+          placeholderTextColor: "red.500",
+        }}
+        placeholderTextColor="gray.300"
         {...rest}
       />
-    </>
+    </FormControl>
   );
 }
