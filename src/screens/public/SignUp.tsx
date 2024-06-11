@@ -2,7 +2,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Image } from "react-native";
-import { Center, Heading, ScrollView, Text, VStack } from "native-base";
+import { Center, Heading, ScrollView, Text, Toast, VStack } from "native-base";
+
+import axios from "axios";
+import { api } from "@services/api";
 
 import { useForm, Controller } from "react-hook-form";
 
@@ -48,8 +51,21 @@ export function SignUp() {
 
   const navigation = useNavigation();
 
-  function handleSignUp(data: FormValidation) {
-    return console.log(data);
+  async function handleSignUp({ name, email, password }: FormValidation) {
+    try {
+      const response = await api.post("/users", { name, email, password });
+      console.log(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorRequest = error.response?.data.message;
+        return Toast.show({
+          paddingY: 3,
+          placement: "top",
+          bgColor: "red.500",
+          title: errorRequest,
+        });
+      }
+    }
   }
 
   function handleGoBack() {
