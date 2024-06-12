@@ -4,8 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Image } from "react-native";
 import { Center, Heading, ScrollView, Text, Toast, VStack } from "native-base";
 
-import axios from "axios";
 import { api } from "@services/api";
+
+import { AppError } from "@utils/AppError";
 
 import { useForm, Controller } from "react-hook-form";
 
@@ -56,15 +57,18 @@ export function SignUp() {
       const response = await api.post("/users", { name, email, password });
       console.log(response.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errorRequest = error.response?.data.message;
-        return Toast.show({
-          paddingY: 3,
-          placement: "top",
-          bgColor: "red.500",
-          title: errorRequest,
-        });
-      }
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : "Não foi possível criar a conta. Tente novamente mais tarde";
+
+      return Toast.show({
+        title,
+        paddingY: 3,
+        placement: "top",
+        bgColor: "red.500",
+      });
     }
   }
 
