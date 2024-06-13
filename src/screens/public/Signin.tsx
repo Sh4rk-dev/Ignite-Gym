@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useAuth } from "@hooks/useAuth";
+
 import { Controller, useForm } from "react-hook-form";
 
 import { Image } from "react-native";
@@ -11,7 +13,6 @@ import BackgroundImg from "@assets/background.png";
 
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
-import { AppNavigationTabsRoutesProps } from "@routes/app.routes";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
@@ -26,8 +27,9 @@ const schemaSingInForm = z.object({
 type FormSigInValidation = z.infer<typeof schemaSingInForm>;
 
 export function SignIn() {
+  const { signIn } = useAuth();
+
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
-  const navigationAppTabs = useNavigation<AppNavigationTabsRoutesProps>();
 
   const {
     control,
@@ -42,9 +44,8 @@ export function SignIn() {
     navigation.navigate("singUp");
   }
 
-  function handleLoginAccount(data: FormSigInValidation) {
-    return console.log(data);
-    ;
+  async function handleLoginAccount({ email, password }: FormSigInValidation) {
+    await signIn(email, password);
   }
 
   return (
