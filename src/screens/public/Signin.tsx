@@ -1,12 +1,16 @@
+import { useState } from "react";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useAuth } from "@hooks/useAuth";
 
+import { AppError } from "@utils/AppError";
+
 import { Controller, useForm } from "react-hook-form";
 
 import { Image } from "react-native";
-import { Center, Heading, ScrollView, Text, VStack } from "native-base";
+import { Center, Heading, ScrollView, Text, Toast, VStack } from "native-base";
 
 import LogoSvg from "@assets/logo.svg";
 import BackgroundImg from "@assets/background.png";
@@ -27,6 +31,7 @@ const schemaSingInForm = z.object({
 type FormSigInValidation = z.infer<typeof schemaSingInForm>;
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
@@ -45,7 +50,24 @@ export function SignIn() {
   }
 
   async function handleLoginAccount({ email, password }: FormSigInValidation) {
-    await signIn(email, password);
+    try {
+      setIsLoading(true);
+      await signIn(email, password);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : "Não foi possível entrar. Tente novamente mais tarde!";
+
+      setIsLoading(false);
+      Toast.show({
+        title,
+        paddingY: 3,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
   }
 
   return (
@@ -111,7 +133,11 @@ export function SignIn() {
             )}
           />
 
-          <Button title="Acessar" onPress={handleSubmit(handleLoginAccount)} />
+          <Button
+            title="Acessar"
+            onPress={handleSubmit(handleLoginAccount)}
+            isLoading={isLoading}
+          />
         </Center>
 
         <Center mt={"40"}>
