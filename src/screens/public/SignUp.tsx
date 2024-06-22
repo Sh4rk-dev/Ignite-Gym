@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -17,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { useAuth } from "@hooks/useAuth";
 
 const FormSchemaValidation = z
   .object({
@@ -41,6 +44,10 @@ const FormSchemaValidation = z
 type FormValidation = z.infer<typeof FormSchemaValidation>;
 
 export function SignUp() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { signIn } = useAuth();
+
   const {
     control,
     register,
@@ -54,9 +61,13 @@ export function SignUp() {
 
   async function handleSignUp({ name, email, password }: FormValidation) {
     try {
-      const response = await api.post("/users", { name, email, password });
-      
+      setIsLoading(true);
+
+      await api.post("/users", { name, email, password });
+      await signIn(email, password);
     } catch (error) {
+      setIsLoading(false);
+
       const isAppError = error instanceof AppError;
 
       const title = isAppError
@@ -173,8 +184,9 @@ export function SignUp() {
           />
 
           <Button
-            onPress={handleSubmit(handleSignUp)}
             title="Criar e acessar"
+            isLoading={isLoading}
+            onPress={handleSubmit(handleSignUp)}
           />
         </Center>
 
