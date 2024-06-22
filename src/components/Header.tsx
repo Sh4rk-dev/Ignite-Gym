@@ -1,10 +1,14 @@
 import { HStack, Heading, Text, VStack } from "native-base";
 import { Avatar } from "./Avatar";
+import { ImageSourcePropType } from "react-native";
 
 type variants = "start" | "center" | "end" | "space-between";
 
 interface IHeaderProps {
   children: React.ReactNode;
+}
+interface IAvatarProps {
+  url: ImageSourcePropType;
 }
 
 interface IHeaderTitleProps {
@@ -35,7 +39,7 @@ function HeaderTitle({
   title,
   subTitle,
   hasSubTitle,
-  position
+  position,
 }: IHeaderTitleProps) {
   return (
     <VStack flex={1} alignItems={position}>
@@ -51,14 +55,8 @@ function HeaderTitle({
   );
 }
 
-function HeaderAvatar() {
-  return (
-    <Avatar
-      size={12}
-      alt="Imagem do usuário"
-      source={{ uri: "https://github.com/Sh4rk-dev.png" }}
-    />
-  );
+function HeaderAvatar({ url }: IAvatarProps) {
+  return <Avatar size={12} alt="Imagem do usuário" source={url} />;
 }
 
 Header.Title = HeaderTitle;

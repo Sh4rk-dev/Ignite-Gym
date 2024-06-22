@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList, HStack, Heading, Icon, Text, VStack } from "native-base";
 
+import { useAuth } from "@hooks/useAuth";
+
 import { ArrayExercise } from "@utils/interfaces";
 
 import { AppNavigationTabsRoutesProps } from "@routes/app.routes";
@@ -15,12 +17,16 @@ import { Header } from "@components/Header";
 import { GroupCard } from "@components/GroupCard";
 import { ExerciseCard } from "@components/ExerciseCard";
 
+import defaultUserPhotoImg from "@assets/userPhotoDefault.png";
+
 export function Home() {
+  const { user, signOut } = useAuth();
   const [currentExercise, setCurrentExercise] = useState("Peito");
 
   const Exercise = Exercises.filter((item) => item.type === currentExercise);
 
   const Navigation = useNavigation<AppNavigationTabsRoutesProps>();
+  
   function handleOpenExerciseDetails(data: ArrayExercise) {
     const ExerciseData = data;
     return Navigation.navigate("exercise"), console.log(ExerciseData);
@@ -29,9 +35,17 @@ export function Home() {
   return (
     <VStack flex={1}>
       <Header>
-        <Header.Avatar />
-        <Header.Title title="Olá," subTitle="Renan Rapace" hasSubTitle />
-        <Icon name="logout" as={MaterialIcons} color={"white"} size={6} />
+        <Header.Avatar
+          url={user.avatar ? { uri: user.avatar } : defaultUserPhotoImg}
+        />
+        <Header.Title title="Olá," subTitle={user.name} hasSubTitle />
+        <Icon
+          name="logout"
+          as={MaterialIcons}
+          color={"white"}
+          size={6}
+          onPress={signOut}
+        />
       </Header>
 
       <FlatList
