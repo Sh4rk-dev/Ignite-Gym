@@ -33,11 +33,10 @@ export function Home() {
   const [exercise, setExercise] = useState<ExerciseDTO[]>([]);
   const [currentExercise, setCurrentExercise] = useState("antebraço");
 
-  const Navigation = useNavigation<AppNavigationTabsRoutesProps>();
+  const navigation = useNavigation<AppNavigationTabsRoutesProps>();
 
-  function handleOpenExerciseDetails(data: ExerciseDTO) {
-    const ExerciseData = data;
-    return Navigation.navigate("exercise"), console.log(ExerciseData);
+  function handleOpenExerciseDetails(exerciseId: string) {
+    navigation.navigate("exercise", { exerciseId });
   }
 
   async function fetchExercisesByGroup() {
@@ -154,7 +153,7 @@ export function Home() {
               return (
                 <ExerciseCard
                   data={item}
-                  onPress={() => handleOpenExerciseDetails(item)}
+                  onPress={() => handleOpenExerciseDetails(item.id)}
                 />
               );
             }}
