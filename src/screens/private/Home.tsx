@@ -1,44 +1,100 @@
-import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { FlatList, HStack, Heading, Icon, Text, VStack } from "native-base";
+import { useCallback, useEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  FlatList,
+  HStack,
+  Heading,
+  Icon,
+  Text,
+  Toast,
+  VStack,
+} from "native-base";
+
+import { api } from "@services/api";
 
 import { useAuth } from "@hooks/useAuth";
+import { ExerciseDTO } from "@dtos/ExerciseDTO";
 
-import { ArrayExercise } from "@utils/interfaces";
-
+import { AppError } from "@utils/AppError";
 import { AppNavigationTabsRoutesProps } from "@routes/app.routes";
-
-import { MuscleGroup } from "@moked/groupCard";
-import { Exercises } from "@moked/arrayExercise";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { Header } from "@components/Header";
+import { Loading } from "@components/loading";
 import { GroupCard } from "@components/GroupCard";
 import { ExerciseCard } from "@components/ExerciseCard";
 
-import defaultUserPhotoImg from "@assets/userPhotoDefault.png";
-
 export function Home() {
-  const { user, signOut } = useAuth();
-  const [currentExercise, setCurrentExercise] = useState("Peito");
+  const { signOut } = useAuth();
 
-  const Exercise = Exercises.filter((item) => item.type === currentExercise);
+  const [isLoading, setIsLoading] = useState(true);
+  const [groups, setGroups] = useState<string[]>();
+  const [exercise, setExercise] = useState<ExerciseDTO[]>([]);
+  const [currentExercise, setCurrentExercise] = useState("antebraço");
 
   const Navigation = useNavigation<AppNavigationTabsRoutesProps>();
-  
-  function handleOpenExerciseDetails(data: ArrayExercise) {
+
+  function handleOpenExerciseDetails(data: ExerciseDTO) {
     const ExerciseData = data;
     return Navigation.navigate("exercise"), console.log(ExerciseData);
   }
 
+  async function fetchExercisesByGroup() {
+    try {
+      setIsLoading(true);
+
+      const response = await api.get(`/exercises/bygroup/${currentExercise}`);
+      setExercise(response.data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar treinos.";
+
+      Toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchGroups() {
+    try {
+      const { data } = await api.get("/groups");
+      setGroups(data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os groupos musculares.";
+
+      Toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
+  }
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchExercisesByGroup();
+    }, [currentExercise])
+  );
+
   return (
     <VStack flex={1}>
       <Header>
-        <Header.Avatar
-          url={user.avatar ? { uri: user.avatar } : defaultUserPhotoImg}
-        />
-        <Header.Title title="Olá," subTitle={user.name} hasSubTitle />
+        <Header.Avatar />
+        <Header.Title title="Olá," hasSubTitle />
         <Icon
           name="logout"
           as={MaterialIcons}
@@ -54,61 +110,60 @@ export function Home() {
         maxH={10}
         minH={10}
         horizontal
-        data={MuscleGroup}
-        keyExtractor={(item) => item.id}
+        data={groups}
+        keyExtractor={(item) => item}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => {
           const Active =
-            currentExercise.toLocaleUpperCase() ===
-            item.text.toLocaleUpperCase();
+            currentExercise.toLocaleUpperCase() === item.toLocaleUpperCase();
           return (
             <GroupCard
-              text={item.text}
+              text={item}
               isActive={Active}
-              onPress={() => setCurrentExercise(item.text)}
+              onPress={() => setCurrentExercise(item)}
             />
           );
         }}
         _contentContainerStyle={{ px: 6, height: 16 }}
       />
 
-      <VStack flex={1} px={6}>
-        <HStack
-          pt={10}
-          pb={2}
-          fontFamily={"heading"}
-          justifyContent={"space-between"}
-        >
-          <Heading fontSize={"xl"} color={"gray.200"} fontFamily={"heading"}>
-            Exercícios
-          </Heading>
-          <Text fontSize={"md"} color={"gray.200"}>
-            {Exercise.length}
-          </Text>
-        </HStack>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <VStack flex={1} px={6}>
+          <HStack
+            pt={10}
+            pb={2}
+            fontFamily={"heading"}
+            justifyContent={"space-between"}
+          >
+            <Heading fontSize={"xl"} color={"gray.200"} fontFamily={"heading"}>
+              Exercícios
+            </Heading>
+            <Text fontSize={"md"} color={"gray.200"}>
+              {exercise?.length}
+            </Text>
+          </HStack>
 
-        <FlatList
-          mb={22}
-          data={Exercise}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
-            return (
-              <ExerciseCard
-                img={item.img}
-                text={item.text}
-                type={item.type}
-                repetitions={item.repetitions}
-                numberOfSeries={item.numberOfSeries}
-                onPress={() => handleOpenExerciseDetails(item)}
-              />
-            );
-          }}
-          _contentContainerStyle={{
-            paddingBottom: 20,
-          }}
-        />
-      </VStack>
+          <FlatList
+            mb={22}
+            data={exercise}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => {
+              return (
+                <ExerciseCard
+                  data={item}
+                  onPress={() => handleOpenExerciseDetails(item)}
+                />
+              );
+            }}
+            _contentContainerStyle={{
+              paddingBottom: 20,
+            }}
+          />
+        </VStack>
+      )}
     </VStack>
   );
 }

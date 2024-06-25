@@ -1,19 +1,17 @@
 import { HStack, Heading, Text, VStack } from "native-base";
 import { Avatar } from "./Avatar";
-import { ImageSourcePropType } from "react-native";
+import { useAuth } from "@hooks/useAuth";
+
+import defaultUserPhotoImg from "@assets/userPhotoDefault.png";
 
 type variants = "start" | "center" | "end" | "space-between";
 
 interface IHeaderProps {
   children: React.ReactNode;
 }
-interface IAvatarProps {
-  url: ImageSourcePropType;
-}
-
 interface IHeaderTitleProps {
   title: string;
-  subTitle?: string;
+  subTitle?: boolean;
   position?: variants;
   hasSubTitle?: boolean;
 }
@@ -41,6 +39,8 @@ function HeaderTitle({
   hasSubTitle,
   position,
 }: IHeaderTitleProps) {
+  const { user } = useAuth();
+
   return (
     <VStack flex={1} alignItems={position}>
       <Heading color={"gray.100"} fontSize={"lg"} fontFamily={"heading"}>
@@ -48,15 +48,25 @@ function HeaderTitle({
       </Heading>
       {hasSubTitle && (
         <Text color={"white"} fontSize={"md"}>
-          {subTitle}
+          {!subTitle && user.name}
         </Text>
       )}
     </VStack>
   );
 }
 
-function HeaderAvatar({ url }: IAvatarProps) {
-  return <Avatar size={12} alt="Imagem do usuário" source={url} />;
+function HeaderAvatar() {
+  const { user } = useAuth();
+  console.log(user.avatar);
+  
+
+  return (
+    <Avatar
+      size={12}
+      alt="Imagem do usuário"
+      source={user.avatar ? { uri: user.avatar } : defaultUserPhotoImg}
+    />
+  );
 }
 
 Header.Title = HeaderTitle;
