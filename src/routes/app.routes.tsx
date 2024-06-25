@@ -1,6 +1,6 @@
 import {
   BottomTabNavigationProp,
-  createBottomTabNavigator
+  createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
 
 import { Exercise } from "@screens/private/Exercise";
@@ -19,7 +19,7 @@ type AppRoutes = {
   home: undefined;
   history: undefined;
   profile: undefined;
-  exercise: undefined;
+  exercise: { exerciseId: string };
 };
 
 const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
@@ -45,8 +45,8 @@ export function AppRoutes() {
           position: "relative",
           borderColor: colors.gray[700],
           backgroundColor: colors.gray[600],
-          height: Platform.OS === "android" ? 64 : 96
-        }
+          height: Platform.OS === "android" ? 64 : 96,
+        },
       }}
     >
       <Screen
@@ -55,7 +55,7 @@ export function AppRoutes() {
         options={{
           tabBarIcon: ({ color }) => {
             return <HomeSvg width={sizeSvg} height={sizeSvg} fill={color} />;
-          }
+          },
         }}
       />
       <Screen
@@ -64,7 +64,7 @@ export function AppRoutes() {
         options={{
           tabBarIcon: ({ color }) => {
             return <HistorySvg width={sizeSvg} height={sizeSvg} fill={color} />;
-          }
+          },
         }}
       />
       <Screen
@@ -73,14 +73,14 @@ export function AppRoutes() {
         options={{
           tabBarIcon: ({ color }) => {
             return <ProfileSvg width={sizeSvg} height={sizeSvg} fill={color} />;
-          }
+          },
         }}
       />
       <Screen
         name="exercise"
         component={Exercise}
         options={{
-          tabBarButton: () => null
+          tabBarButton: () => null,
         }}
       />
     </Navigator>

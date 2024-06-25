@@ -57,8 +57,6 @@ function HeaderTitle({
 
 function HeaderAvatar() {
   const { user } = useAuth();
-  console.log(user.avatar);
-  
 
   return (
     <Avatar
