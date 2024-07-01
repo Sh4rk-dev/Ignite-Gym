@@ -1,17 +1,46 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
+import { Center, Heading, Text, Toast, VStack } from "native-base";
 import { SectionList } from "react-native";
-import { Center, Heading, Image, Text, VStack } from "native-base";
-
-import { Data } from "@moked/historyExercise";
-
 import { Header } from "@components/Header";
 import { HistoryCard } from "@components/HistoryCard";
 
 import EmptySVG from "@assets/EmptyPersonalTrainer.svg";
+import { useFocusEffect } from "@react-navigation/native";
+import { AppError } from "@utils/AppError";
+import { api } from "@services/api";
+import { HistoryByDayDTO } from "@dtos/HistoryByDayDTO";
 
 export function History() {
-  const HistoryExercise = Data;
+  const [isLoading, setIsLoading] = useState(true);
+  const [historyExercise, setHistoryExercise] = useState<HistoryByDayDTO[]>([]);
+
+  async function fetchHistory() {
+    try {
+      setIsLoading(true);
+      const response = await api.get("/history");
+      setHistoryExercise(response.data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar o histórico.";
+
+      Toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.700"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchHistory();
+    }, [])
+  );
 
   return (
     <VStack flex={1}>
@@ -20,15 +49,15 @@ export function History() {
       </Header>
 
       <SectionList
-        sections={HistoryExercise}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => <HistoryCard />}
+        sections={historyExercise}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <HistoryCard data={item} />}
         contentContainerStyle={
-          HistoryExercise.length === 0
+          historyExercise.length === 0
             ? {
                 flex: 1,
                 justifyContent: "center",
-                marginTop: -120,
+                marginTop: -120
               }
             : { paddingHorizontal: 20 }
         }
