@@ -2,21 +2,59 @@ import { useState } from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
 import { Center, Skeleton, Text, VStack, useToast } from "native-base";
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { api } from "@services/api";
+import { AppError } from "@utils/AppError";
+import { Controller, useForm } from "react-hook-form";
+
 import * as ImagePicker from "expo-image-picker";
 
 import { Input } from "@components/Input";
 import { Avatar } from "@components/Avatar";
 import { Header } from "@components/Header";
 import { Button } from "@components/Button";
+import { useAuth } from "@hooks/useAuth";
 
 const PHOTO_SIZE = 33;
 
+const schemaProfileForm = z
+  .object({
+    name: z.string().min(3, { message: "Digite um nome válido" }).trim(),
+    email: z.string(),
+    old_password: z.string().trim().optional(),
+    password: z.string().trim().optional(),
+    confirm_Password: z.string().trim().optional(),
+  })
+  .refine((data) => data.confirm_Password === data.password, {
+    message: "A confirmação de senha não confere.",
+    path: ["confirm_Password"],
+  });
+type FormProfileValidation = z.infer<typeof schemaProfileForm>;
+
 export function Profile() {
+  const [buttonEditIsActive, setButtonEditIsActive] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [userPhoto, setUserPhoto] = useState(
     "https://github.com/Sh4rk-dev.png"
   );
+
   const Toast = useToast();
+  const { user } = useAuth();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormProfileValidation>({
+    resolver: zodResolver(schemaProfileForm),
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+    },
+  });
 
   async function handleUserPhotoSelect() {
     setPhotoIsLoading(true);
@@ -50,6 +88,37 @@ export function Profile() {
       console.log(error);
     } finally {
       setPhotoIsLoading(false);
+    }
+  }
+
+  async function handleProfileUpdate(data: FormProfileValidation) {
+    try {
+      console.log(data);
+
+      setIsUpdating(true);
+
+      await api.put("/users", data);
+
+      Toast.show({
+        paddingY: 3,
+        placement: "top",
+        bgColor: "green.500",
+        title: "Perfil atualizado com sucesso!",
+      });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível atualizar os dados. Tente novamente mais tarde!";
+      Toast.show({
+        paddingY: 3,
+        placement: "top",
+        bgColor: "red.500",
+        title,
+      });
+    } finally {
+      setIsUpdating(false);
+      setButtonEditIsActive(true);
     }
   }
 
@@ -88,19 +157,36 @@ export function Profile() {
             </Text>
           </TouchableOpacity>
 
-          <Input
-            bg={"gray.600"}
-            autoCapitalize="none"
-            keyboardType="default"
-            placeholder="Renan Rapace"
+          <Controller
+            name="name"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <Input
+                value={value}
+                bg={"gray.600"}
+                placeholder="Nome"
+                onChangeText={onChange}
+                isDisabled={buttonEditIsActive}
+                isReadOnly={buttonEditIsActive}
+                errorMessage={errors.name?.message}
+              />
+            )}
           />
 
-          <Input
-            isDisabled
-            bg={"gray.600"}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            placeholder="renanrapace13@gmail.com"
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { value } }) => (
+              <Input
+                isDisabled
+                isReadOnly
+                value={value}
+                bg={"gray.600"}
+                placeholder="E-mail"
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
+            )}
           />
         </Center>
 
@@ -114,27 +200,71 @@ export function Profile() {
             Alterar senha
           </Text>
 
-          <Input
-            secureTextEntry
-            bg={"gray.600"}
-            autoCapitalize="none"
-            placeholder="Senha antiga"
+          <Controller
+            name="old_password"
+            control={control}
+            render={({ field: { onChange } }) => (
+              <Input
+                secureTextEntry
+                bg={"gray.600"}
+                autoCapitalize="none"
+                onChangeText={onChange}
+                isDisabled={buttonEditIsActive}
+                isReadOnly={buttonEditIsActive}
+                placeholder="Digite a senha antiga..."
+              />
+            )}
           />
 
-          <Input
-            secureTextEntry
-            bg={"gray.600"}
-            autoCapitalize="none"
-            placeholder="Nova senha"
+          <Controller
+            name="password"
+            control={control}
+            render={({ field: { onChange } }) => (
+              <Input
+                secureTextEntry
+                bg={"gray.600"}
+                autoCapitalize="none"
+                onChangeText={onChange}
+                isDisabled={buttonEditIsActive}
+                isReadOnly={buttonEditIsActive}
+                errorMessage={errors.password?.message}
+                placeholder="Digite a nova senha..."
+              />
+            )}
           />
 
-          <Input
-            secureTextEntry
-            bg={"gray.600"}
-            autoCapitalize="none"
-            placeholder="Confirme a nova senha"
+          <Controller
+            name="confirm_Password"
+            control={control}
+            render={({ field: { onChange } }) => (
+              <Input
+                secureTextEntry
+                bg={"gray.600"}
+                autoCapitalize="none"
+                onChangeText={onChange}
+                isDisabled={buttonEditIsActive}
+                isReadOnly={buttonEditIsActive}
+                placeholder="Confirme a nova senha..."
+                errorMessage={errors.confirm_Password?.message}
+              />
+            )}
           />
-          <Button disabled title="Atualizar" mt={6} />
+
+          {buttonEditIsActive ? (
+            <Button
+              isLoading={isUpdating}
+              onPress={() => setButtonEditIsActive((prev) => !prev)}
+              title="Editar"
+              mt={6}
+            />
+          ) : (
+            <Button
+              isLoading={isUpdating}
+              onPress={handleSubmit(handleProfileUpdate)}
+              title="Atualizar"
+              mt={6}
+            />
+          )}
         </Center>
       </ScrollView>
     </VStack>
